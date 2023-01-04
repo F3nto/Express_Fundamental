@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const authRoute = require('./routes/auth')
 const groceriesRoute = require('./routes/groceries')
 const marketRoute = require('./routes/markets')
 
@@ -25,9 +26,12 @@ app.use((req, res, next) => {
     next();
 
 })
+
+
  
 app.use('/api/v1/grocery',groceriesRoute)
 app.use('/api/v1/market', marketRoute)
+app.use('/api/v1/auth', authRoute)
 
 
 app.listen(process.env.PORT, () => {console.log(`Server Running ${process.env.PORT}!!!`)})
