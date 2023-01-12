@@ -1,39 +1,52 @@
 const {Router} = require('express')
 const User = require('../database/schema/User')
 const {hashPassword,comparePassword} = require('../utils/helpers')
+const passport = require('passport')
 const route = Router()
 
-route.post('/login', async(req, res) => {
+// route.post('/login', async(req, res) => {
 
-    const {password, email} = req.body
+//     const {password, email} = req.body
 
-    const userDb = await User.findOne({email})
+//     const userDb = await User.findOne({email})
 
-    if(!userDb) return res.send(401);
+//     if(!userDb) return res.send(401);
 
-    const rightPassword = comparePassword(password, userDb.password)
+//     const isValid = comparePassword(password, userDb.password)
 
 
-    if(rightPassword){
+//     if(isValid){
 
-      console.log('Authenticated Successfully!!!');
+//       console.log('Authenticated Successfully!!!');
         
-      req.session.user = userDb
+//       req.session.user = userDb
 
-      return res.send(200)
+//       return res.send(200)
 
-    }else{
+//     }else{
 
-     console.log('Failed Authenticated!!!')
+//      console.log('Failed Authenticated!!!')
 
-     return res.send(401)
-
-
-    }
+//      return res.send(401)
 
 
+//     }
+
+
+
+// })
+
+route.post('/login', passport.authenticate('local'), (req, res) => {
+
+    console.log("Logged In")
+
+    return res.send(200);
 
 })
+
+
+
+
 route.post('/register', async(req, res) => {
 
     const {email} = req.body

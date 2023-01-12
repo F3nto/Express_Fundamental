@@ -2,12 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const passport = require('passport')
+require('./strategies/local')
+
+//Routes
 const authRoute = require('./routes/auth')
 const groceriesRoute = require('./routes/groceries')
 const marketRoute = require('./routes/markets');
 
 
 require('dotenv').config()
+
 
 const app = express()
 
@@ -30,6 +35,9 @@ app.use((req, res, next) => {
 })
 
 
+
+app.use(passport.initialize());
+app.use(passport.session())
  
 app.use('/api/v1/grocery',groceriesRoute)
 app.use('/api/v1/market', marketRoute)
