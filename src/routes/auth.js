@@ -1,42 +1,55 @@
 const {Router} = require('express')
 const User = require('../database/schema/User')
+const {hashPassword,comparePassword} = require('../utils/helpers')
 const route = Router()
 
-route.post('/login', (req, res) => {
+route.post('/login', async(req, res) => {
 
-    const {username, password} = req.body 
+    const {password, email} = req.body
 
-    req.session.user = {username}
+    const userDb = await User.findOne({email})
+
+    if(!userDb) return res.send(401);
+
+    const rightPassword = comparePassword(password, userDb.password)
 
 
-    if(username && password){
+    if(rightPassword){
 
-        if(req.session.user){
+      console.log('Authenticated Successfully!!!');
+        
+      req.session.user = userDb
 
-            res.send(req.session.user)
-               
-        }
-
+      return res.send(200)
 
     }else{
 
+     console.log('Failed Authenticated!!!')
 
-        res.send(401)
+     return res.send(401)
+
 
     }
-})
 
+
+
+})
 route.post('/register', async(req, res) => {
 
-    const {username, password, email} = req.body
+    const {email} = req.body
+    const password = hashPassword(req.body.password)
 
-    const UserInfo = await User.findOne({$or: [{username},  {email}]});
+    const UserInfo = await User.findOne({email});
 
     if(!UserInfo){
 
-        const newUser = await User.create({username, password, email})
+    
+        const newUser = await User.create({email, password})
         newUser.save()
 
+        console.log("Hash Password.....", password)
+
+        res.send(201)
         
     }else{
 
