@@ -36,7 +36,6 @@ let groceryList = [
 
 ]
 
-
 router.get('/' , (req, res) => {
 
     

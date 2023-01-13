@@ -70,10 +70,7 @@ route.post('/register', async(req, res) => {
         res.status(400).send({msg : "User Already Exit!!!"})
 
     }
-
-
-
-
+    
 })
 
 module.exports = route
