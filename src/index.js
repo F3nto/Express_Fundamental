@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const mongoStore = require('connect-mongo')
 const passport = require('passport')
 require('./strategies/local')
 
@@ -22,7 +23,19 @@ app.use(express.json())
 app.use(express.urlencoded())
 
 app.use(cookieParser())
-app.use(session({ secret : "FHONFNOWNFWHOF02IOEIF2JIO23RU1344##$%", resave:false, saveUninitialized:false}))
+app.use(session({ 
+    
+    secret : "FHONFNOWNFWHOF02IOEIF2JIO23RU1344##$%", 
+    resave:false, 
+    saveUninitialized:false,
+    
+    store : mongoStore.create({
+
+        mongoUrl : 'mongodb://localhost:27017',
+
+    })
+
+}))
 
 
 
